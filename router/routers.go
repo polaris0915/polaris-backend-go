@@ -7,7 +7,7 @@ import (
 )
 
 // InitRouter 处理所有路由的挂载
-func InitRouter() {
+func InitRouter() *gin.Engine {
 	// 初始化gin的*Engine
 	router := gin.Default()
 	// 挂载url找不到的处理函数
@@ -27,6 +27,7 @@ func InitRouter() {
 		}
 	}
 
-	// TODO: 目前一定要Run()，以后需要更改，参考Nginx UI的处理方式
-	router.Run()
+	// Done: 目前一定要Run()，以后需要更改，参考Nginx UI的处理方式
+	//router.Run()
+	return router
 }
