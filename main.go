@@ -2,11 +2,11 @@ package main
 
 import (
 	"errors"
+	"github.com/backend/model"
 	"github.com/backend/router"
 	"github.com/jpillora/overseer"
 	"log"
 	"net/http"
-	"time"
 )
 
 func Program() func(state overseer.State) {
@@ -33,9 +33,11 @@ func Program() func(state overseer.State) {
 }
 
 func main() {
-	overseer.Run(overseer.Config{
-		Program:          Program(),
-		Address:          "127.0.0.1:8080",
-		TerminateTimeout: 5 * time.Second,
-	})
+	//overseer.Run(overseer.Config{
+	//	Program:          Program(),
+	//	Address:          "127.0.0.1:8080",
+	//	TerminateTimeout: 5 * time.Second,
+	//})
+	model.InitMysql()
+	log.Fatal(router.InitRouter().Run())
 }
