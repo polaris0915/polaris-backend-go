@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="polaris-oj" uuid="c0ffcbd9-0128-4a4e-ae2a-53f47f48c29b">
+    <data-source source="LOCAL" name="localhostMySQL" uuid="c0ffcbd9-0128-4a4e-ae2a-53f47f48c29b">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
