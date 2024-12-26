@@ -11,3 +11,7 @@ type User struct {
 	Profile  string `json:"profile"`
 	Role     string `json:"role" gorm:"default:user;"`
 }
+
+func (u *User) TableName() string {
+	return "user"
+}
