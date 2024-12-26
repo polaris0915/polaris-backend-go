@@ -38,6 +38,6 @@ func main() {
 	//	Address:          "127.0.0.1:8080",
 	//	TerminateTimeout: 5 * time.Second,
 	//})
-	model.InitMysql()
+	model.InitMysql() // 配置
 	log.Fatal(router.InitRouter().Run())
 }
