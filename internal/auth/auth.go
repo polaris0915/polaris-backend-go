@@ -8,7 +8,7 @@ import (
 
 var (
 	// token有效时间
-	expireTime = 20 * time.Second
+	expireTime = 24 * 3600 * time.Second
 	// 签发token和解析token的jwtKey
 	jwtKey = "go-backend"
 )
