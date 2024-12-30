@@ -2,6 +2,7 @@ package user
 
 import (
 	"errors"
+	"github.com/backend/internal/auth"
 	"github.com/backend/model"
 	"github.com/gin-gonic/gin"
 	"github.com/go-sql-driver/mysql"
@@ -151,10 +152,74 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
+
+	//a, _ := auth.ParseToken(c.Request.Header.Get("Authorization"))
+	//fmt.Printf("auth: %v\n", a)
 	// TODO: 没有写完
 	// 返回token
 	// 问题是： 什么是token？？？
+	// 生成的token，让放在请求头，或者cookie或者session中
+	token, err := auth.NewToken(user.Identity, user.Role)
+	if err != nil {
+		// TODO: log记录
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": SystemError.Error(),
+			"code":    http.StatusInternalServerError,
+		})
+		return
+	}
+	c.Header("Authorization", token)
+
 	c.JSON(http.StatusOK, gin.H{
 		"data": true,
+		"code": http.StatusOK,
+	})
+}
+
+// Delete /api/users/:id DELETE
+func Delete(c *gin.Context) {
+	// /api/users/420727bd-9809-45cf-92db-cc5d1e256bdb
+	identity := c.Param("id")
+	// 只有管理员或者用户本人才可以进行注销操作
+	// 校验身份
+	authorization := c.Request.Header.Get("Authorization")
+	if authorization == "" {
+		// 没有权限
+		c.JSON(http.StatusForbidden, gin.H{
+			"message": BanError.Error(),
+			"code":    http.StatusForbidden,
+		})
+		return
+	}
+	authStruct, err := auth.ParseToken(authorization)
+	if err != nil {
+		c.JSON(http.StatusForbidden, gin.H{
+			"message": BanError.Error(),
+			"code":    http.StatusForbidden,
+		})
+		return
+	}
+	// 如果是本人或者管理员
+	// 有权限
+	if authStruct.Identity == identity || authStruct.Role == Admin {
+		// 实现软删除
+		if err := model.UseDB().Delete(&model.User{}, "identity = ?", identity).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": SystemError.Error(),
+				"code":    http.StatusInternalServerError,
+			})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"data": true,
+			"code": http.StatusOK,
+		})
+		return
+	}
+	// 如果不是本人或者管理员
+	// 没有权限
+	c.JSON(http.StatusForbidden, gin.H{
+		"message": BanError.Error(),
+		"code":    http.StatusForbidden,
 	})
 }
